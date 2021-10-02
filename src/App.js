@@ -25,7 +25,7 @@ function App() {
     const id = sessionStorage.getItem("userId");
     if (id === null) history.push("/login");
     // eslint-disable-next-line
-  }, []);
+  }, [history]);
 
   useEffect(() => {
     getUsers();
@@ -51,9 +51,11 @@ function App() {
       .catch((error) => {
         console.log("Error getting documents: ", error);
       });
+    updateStatus();
   };
 
   const updateStatus = () => {
+    const id = sessionStorage.getItem("userId");
     const dbRef = database.ref();
     dbRef
       .child("chat")
@@ -61,14 +63,15 @@ function App() {
       .then((snapshot) => {
         if (snapshot.exists()) {
           for (let key in snapshot.val()) {
-            if (key.includes(userId)) {
-              let temp = snapshot.val()[key][userId];
+            if (key.includes(id)) {
+              console.log(id);
+              let temp = snapshot.val()[key][id];
               for (let key in temp) {
                 if (temp[key].status === "Sent") temp[key].status = "Received";
               }
               if (temp !== undefined) {
                 var updates = {};
-                updates[`/chat/${key}/${userId}`] = temp;
+                updates[`/chat/${key}/${id}`] = temp;
                 database.ref().update(updates);
               }
             }
