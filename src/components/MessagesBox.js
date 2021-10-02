@@ -36,7 +36,8 @@ export default function MessagesBox({ contact }) {
         if (snapshot.exists()) {
           let temp = snapshot.val()[userId];
           for (let key in temp) {
-            if (temp[key].status === "Received") temp[key].status = "Read";
+            // if (temp[key].status === "Received")
+            temp[key].status = "Read";
           }
           var updates = {};
           updates[`/chat/${id}/${userId}`] = temp || {};
