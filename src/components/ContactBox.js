@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import singleCheck from "../assets/single-tick.png";
 import doubleCheck from "../assets/done_all.svg";
 import doubleCheckGreen from "../assets/blue-tick.png";
+import green from "../assets/green.png";
 import Avatar from "./Avatar";
 import { database } from "../Firebase/index";
 
@@ -104,12 +105,14 @@ export default function ContactBox({ contact, setContactSelected }) {
       <div className="right-section">
         <div className="contact-box-header">
           <h3 className="avatar-title">{contact.name}</h3>
-          <span className="time-mark">
-            {String(new Date(lastMessage?.createdAt).getHours())}:
-            {String(new Date(lastMessage?.createdAt).getMinutes()).length ===
-              1 && "0"}
-            {String(new Date(lastMessage?.createdAt).getMinutes())}
-          </span>
+          {lastMessage?.createdAt !== undefined && (
+            <span className="time-mark">
+              {String(new Date(lastMessage?.createdAt).getHours())}:
+              {String(new Date(lastMessage?.createdAt).getMinutes()).length ===
+                1 && "0"}
+              {String(new Date(lastMessage?.createdAt).getMinutes())}
+            </span>
+          )}
         </div>
         <div className="last-msg">
           &nbsp;&nbsp;&nbsp;
@@ -123,7 +126,19 @@ export default function ContactBox({ contact, setContactSelected }) {
           {lastMessage?.sender === userId && lastMessage?.status === "Read" && (
             <img src={doubleCheckGreen} alt="" className="icon-small" />
           )}
-          <span className="text">{truncate(lastMessage?.message, 30)}</span>
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              width: "100%",
+            }}
+          >
+            <span className="text">{truncate(lastMessage?.message, 30)}</span>
+            {lastMessage?.receiver === userId &&
+              lastMessage?.status !== "Read" && (
+                <img src={green} alt="" className="icon-small" />
+              )}
+          </div>
         </div>
       </div>
     </div>
